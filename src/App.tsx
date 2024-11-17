@@ -1,26 +1,81 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import styled from 'styled-components';
 
-function App() {
+// Global Styles
+import GlobalStyles from './styles/GlobalStyles';
+
+// Components
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Player from './components/Player';
+
+// Pages
+import Home from './pages/Home';
+import Library from './pages/Library';
+import Search from './pages/Search';
+import Playlist from './pages/Playlist';
+
+// Styled Components
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #121212;
+  color: #fff;
+`;
+
+const MainSection = styled.div`
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+`;
+
+const ContentArea = styled.main`
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background: linear-gradient(transparent 0, rgba(0, 0, 0, 0.8) 100%);
+`;
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <GlobalStyles />
+      <AppContainer>
+        {/* Header */}
+        <Header />
+
+        {/* Main Content */}
+        <MainSection>
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Main Content Area */}
+          <ContentWrapper>
+            <ContentArea>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/playlist/:id" element={<Playlist />} />
+              </Routes>
+            </ContentArea>
+
+            {/* Player */}
+            <Player />
+          </ContentWrapper>
+        </MainSection>
+      </AppContainer>
+    </Router>
   );
-}
+};
 
 export default App;
