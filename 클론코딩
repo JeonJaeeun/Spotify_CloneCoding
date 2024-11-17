@@ -1,0 +1,102 @@
+폴더 구조
+---------------
+spotify-clone/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── components/
+│   │   ├── Header.tsx
+│   │   ├── Player.tsx
+│   │   └── Sidebar.tsx
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   ├── Library.tsx
+│   │   ├── Playlist.tsx
+│   │   └── Search.tsx
+│   ├── styles/
+│   │   └── GlobalStyles.ts
+│   ├── App.tsx
+│   └── index.tsx
+├── package.json
+└── tsconfig.json
+
+
+--------------
+
+
+필요한 패키지 설치
+
+npm install react-router-dom styled-components react-icons @types/styled-components
+
+
+
+package.json 기본 설정:
+
+{
+  "name": "spotify-clone",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^16.18.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/styled-components": "^5.1.26",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.10.0",
+    "react-router-dom": "^6.15.0",
+    "styled-components": "^6.0.7",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
+
+
+
+public/index.html:
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Spotify Clone created with React" />
+    <title>Spotify Clone</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+
+
+
+src/index.tsx:
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+
+
+
+
+
