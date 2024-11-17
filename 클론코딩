@@ -1,5 +1,9 @@
-폴더 구조
----------------
+아래는 주신 모든 내용을 .md 파일에 바로 복사해서 사용할 수 있도록 깔끔하게 정리한 최종 버전입니다.
+
+# Spotify Clone 프로젝트
+
+## 프로젝트 구조
+
 spotify-clone/
 ├── public/
 │   ├── index.html
@@ -21,17 +25,13 @@ spotify-clone/
 ├── package.json
 └── tsconfig.json
 
+---
 
---------------
-
-
-필요한 패키지 설치
-
+## 필요한 패키지 설치
+```bash
 npm install react-router-dom styled-components react-icons @types/styled-components
 
-
-
-package.json 기본 설정:
+package.json 기본 설정
 
 {
   "name": "spotify-clone",
@@ -57,9 +57,9 @@ package.json 기본 설정:
   }
 }
 
+주요 파일 코드
 
-
-public/index.html:
+public/index.html
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,9 +77,7 @@ public/index.html:
   </body>
 </html>
 
-
-
-src/index.tsx:
+src/index.tsx
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -95,8 +93,1132 @@ root.render(
   </React.StrictMode>
 );
 
+src/styles/GlobalStyles.ts
 
+import { createGlobalStyle } from 'styled-components';
 
+const GlobalStyles = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    overflow: hidden;
+  }
 
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+`;
+
+export default GlobalStyles;
+
+src/App.tsx
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import styled from 'styled-components';
+import GlobalStyles from './styles/GlobalStyles';
+
+// Components
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Player from './components/Player';
+
+// Pages
+import Home from './pages/Home';
+import Search from './pages/Search';
+import Library from './pages/Library';
+import Playlist from './pages/Playlist';
+
+const AppContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+`;
+
+const MainSection = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #121212;
+  overflow: hidden;
+`;
+
+const ContentArea = styled.main`
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  background: linear-gradient(transparent 0, rgba(0,0,0,.5) 100%);
+`;
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <GlobalStyles />
+      <AppContainer>
+        <Sidebar />
+        <MainSection>
+          <Header />
+          <ContentArea>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/library" element={<Library />} />
+              <Route path="/playlist/:id" element={<Playlist />} />
+            </Routes>
+          </ContentArea>
+          <Player />
+        </MainSection>
+      </AppContainer>
+    </Router>
+  );
+};
+
+export default App;
+
+컴포넌트 코드
+
+src/components/Header.tsx
+
+import React from 'react';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { IoArrowBack, IoArrowForward } from 'react-icons/io5';
+
+const HeaderContainer = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: rgba(0,0,0,.5);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`;
+
+const NavigationButtons = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const NavButton = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, .7);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: scale(1.04);
+  }
+`;
+
+const AuthButtons = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const SignupButton = styled.button`
+  background: none;
+  border: none;
+  color: #a7a7a7;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 500px;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+    transform: scale(1.04);
+  }
+`;
+
+const LoginButton = styled(SignupButton)`
+  background-color: #fff;
+  color: #000;
+
+  &:hover {
+    color: #000;
+  }
+`;
+
+const Header: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleForward = () => {
+    navigate(1);
+  };
+
+  return (
+    <HeaderContainer>
+      <NavigationButtons>
+        <NavButton onClick={handleBack}>
+          <IoArrowBack size={20} />
+        </NavButton>
+        <NavButton onClick={handleForward}>
+          <IoArrowForward size={20} />
+        </NavButton>
+      </NavigationButtons>
+
+      <AuthButtons>
+        <SignupButton>Sign up</SignupButton>
+        <LoginButton>Log in</LoginButton>
+      </AuthButtons>
+    </HeaderContainer>
+  );
+};
+
+export default Header;
+
+추가 페이지 및 컴포넌트
+
+아래 파일들 포함:
+	•	Sidebar.tsx
+	•	Player.tsx
+	•	Home.tsx
+	•	Library.tsx
+	•	Search.tsx
+	•	Playlist.tsx
+
+전체 코드를 보려면 요청해 주세요! 🙂
+
+아래는 추가 페이지 및 컴포넌트 코드를 깔끔하게 정리한 마크다운 .md 파일 형식입니다. 이를 깃허브 리포지토리에 복사하여 사용하실 수 있습니다.
+
+추가 페이지 및 컴포넌트
+
+src/components/Sidebar.tsx
+
+import React from 'react';
+import styled from 'styled-components';
+import { Link, useLocation } from 'react-router-dom';
+import { IoHomeOutline, IoHome, IoSearchOutline, IoSearch } from 'react-icons/io5';
+import { BiLibrary } from 'react-icons/bi';
+import { AiOutlinePlus } from 'react-icons/ai';
+
+const SidebarContainer = styled.aside`
+  width: 300px;
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+`;
+
+const NavigationSection = styled.div`
+  background-color: #121212;
+  border-radius: 8px;
+  padding: 8px;
+`;
+
+const NavItem = styled(Link)<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 12px;
+  color: ${props => props.active ? '#fff' : '#b3b3b3'};
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #fff;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+const LibrarySection = styled(NavigationSection)`
+  flex: 1;
+`;
+
+const LibraryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  color: #b3b3b3;
+
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+`;
+
+const CreateButton = styled.button`
+  color: #b3b3b3;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: #fff;
+  }
+`;
+
+const LibraryContent = styled.div`
+  padding: 8px;
+  color: #b3b3b3;
+  font-size: 0.875rem;
+`;
+
+const CreatePlaylistCard = styled.div`
+  background: #242424;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+
+  h3 {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+  }
+
+  button {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 500px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.04);
+    }
+  }
+`;
+
+const Sidebar: React.FC = () => {
+  const location = useLocation();
+
+  return (
+    <SidebarContainer>
+      <NavigationSection>
+        <NavItem to="/" active={location.pathname === '/'}>
+          {location.pathname === '/' ? <IoHome /> : <IoHomeOutline />}
+          Home
+        </NavItem>
+        <NavItem to="/search" active={location.pathname === '/search'}>
+          {location.pathname === '/search' ? <IoSearch /> : <IoSearchOutline />}
+          Search
+        </NavItem>
+      </NavigationSection>
+
+      <LibrarySection>
+        <LibraryHeader>
+          <div className="title">
+            <BiLibrary />
+            Your Library
+          </div>
+          <CreateButton>
+            <AiOutlinePlus size={20} />
+          </CreateButton>
+        </LibraryHeader>
+
+        <LibraryContent>
+          <CreatePlaylistCard>
+            <h3>Create your first playlist</h3>
+            <p>It's easy, we'll help you</p>
+            <button>Create playlist</button>
+          </CreatePlaylistCard>
+        </LibraryContent>
+      </LibrarySection>
+    </SidebarContainer>
+  );
+};
+
+export default Sidebar;
+
+src/components/Player.tsx
+
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import {
+  IoPlayCircle,
+  IoPauseCircle,
+  IoPlaySkipForward,
+  IoPlaySkipBack,
+  IoShuffle,
+  IoRepeat,
+} from 'react-icons/io5';
+import { BiVolumeFull } from 'react-icons/bi';
+
+const PlayerContainer = styled.div`
+  background-color: #181818;
+  border-top: 1px solid #282828;
+  padding: 8px 16px;
+  height: 90px;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+`;
+
+const TrackInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const TrackImage = styled.div`
+  width: 56px;
+  height: 56px;
+  background-color: #282828;
+  border-radius: 4px;
+`;
+
+const TrackDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  h4 {
+    font-size: 0.875rem;
+    color: #fff;
+    font-weight: 400;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: #a7a7a7;
+  }
+`;
+
+const PlayerControls = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;
+
+const ControlButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+const ControlButton = styled.button`
+  background: none;
+  border: none;
+  color: #a7a7a7;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: #fff;
+  }
+
+  &.play-button {
+    color: #fff;
+
+    &:hover {
+      transform: scale(1.04);
+    }
+  }
+`;
+
+const ProgressBar = styled.div`
+  width: 100%;
+  max-width: 400px;
+  height: 4px;
+  background-color: #4d4d4d;
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+
+  &:hover::after {
+    background-color: #1db954;
+  }
+`;
+
+const VolumeControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+`;
+
+const VolumeBar = styled(ProgressBar)`
+  max-width: 100px;
+`;
+
+const Player: React.FC = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  return (
+    <PlayerContainer>
+      <TrackInfo>
+        <TrackImage />
+        <TrackDetails>
+          <h4>Nothing is playing</h4>
+          <p>Open Spotify to start playing</p>
+        </TrackDetails>
+      </TrackInfo>
+
+      <PlayerControls>
+        <ControlButtons>
+          <ControlButton>
+            <IoShuffle size={18} />
+          </ControlButton>
+          <ControlButton>
+            <IoPlaySkipBack size={18} />
+          </ControlButton>
+          <ControlButton
+            className="play-button"
+            onClick={() => setIsPlaying(!isPlaying)}
+          >
+            {isPlaying ? <IoPauseCircle size={32} /> : <IoPlayCircle size={32} />}
+          </ControlButton>
+          <ControlButton>
+            <IoPlaySkipForward size={18} />
+          </ControlButton>
+          <ControlButton>
+            <IoRepeat size={18} />
+          </ControlButton>
+        </ControlButtons>
+        <ProgressBar />
+      </PlayerControls>
+
+      <VolumeControls>
+        <BiVolumeFull size={20} color="#a7a7a7" />
+        <VolumeBar />
+      </VolumeControls>
+    </PlayerContainer>
+  );
+};
+
+export default Player;
+
+src/pages/Home.tsx, Library.tsx, Search.tsx, Playlist.tsx 등 나머지 컴포넌트들은 요청 시 이어서 정리 가능합니다.
+
+위 방식으로 깔끔하게 이어드립니다! 필요하신 부분 알려주세요. 😊
+
+아래는 나머지 페이지 컴포넌트인 Home.tsx, Library.tsx, Search.tsx, 그리고 Playlist.tsx의 정리된 코드입니다.
+
+src/pages/Home.tsx
+
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
+const HomeContainer = styled.div`
+  padding: 24px;
+`;
+
+const Greeting = styled.h1`
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #fff;
+`;
+
+const TopGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const TopItem = styled.div`
+  background: #ffffff11;
+  border-radius: 4px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #ffffff22;
+  }
+`;
+
+const ItemImage = styled.div`
+  height: 80px;
+  width: 80px;
+  background-color: #282828;
+`;
+
+const ItemTitle = styled.span`
+  padding: 16px;
+  font-weight: 700;
+  color: white;
+`;
+
+const Section = styled.section`
+  margin-bottom: 40px;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #fff;
+`;
+
+const PlaylistGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+`;
+
+const PlaylistCard = styled(Link)`
+  background: #181818;
+  padding: 16px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    background: #282828;
+  }
+`;
+
+const PlaylistImage = styled.div`
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: #282828;
+  border-radius: 4px;
+  margin-bottom: 16px;
+`;
+
+const PlaylistTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+`;
+
+const PlaylistDescription = styled.p`
+  font-size: 14px;
+  color: #a7a7a7;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
+const Home: React.FC = () => {
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  const topItems = [
+    { id: 1, title: 'Liked Songs' },
+    { id: 2, title: 'Recently Played' },
+    { id: 3, title: 'Top Mix' },
+    { id: 4, title: 'Discover Weekly' },
+    { id: 5, title: 'Rock Mix' },
+    { id: 6, title: 'Daily Drive' },
+  ];
+
+  const madeForYou = [
+    {
+      id: 1,
+      title: "Daily Mix 1",
+      description: "Drake, The Weeknd, Travis Scott and more"
+    },
+    {
+      id: 2,
+      title: "Discover Weekly",
+      description: "Your weekly mixtape of fresh music"
+    },
+    {
+      id: 3,
+      title: "Release Radar",
+      description: "Catch all the latest music from artists you follow"
+    },
+    {
+      id: 4,
+      title: "Time Capsule",
+      description: "We made you a personalized playlist with songs to take you back in time"
+    }
+  ];
+
+  const popularPlaylists = [
+    {
+      id: 1,
+      title: "Today's Top Hits",
+      description: "Taylor Swift is on top of the Hottest 50!"
+    },
+    {
+      id: 2,
+      title: "RapCaviar",
+      description: "New music from Drake, Travis Scott and more"
+    },
+    {
+      id: 3,
+      title: "Rock Classics",
+      description: "Rock legends & epic songs that continue to inspire generations"
+    },
+    {
+      id: 4,
+      title: "Chill Hits",
+      description: "Kick back to the best new and recent chill hits"
+    }
+  ];
+
+  return (
+    <HomeContainer>
+      <Greeting>{getGreeting()}</Greeting>
+
+      <TopGrid>
+        {topItems.map(item => (
+          <TopItem key={item.id}>
+            <ItemImage />
+            <ItemTitle>{item.title}</ItemTitle>
+          </TopItem>
+        ))}
+      </TopGrid>
+
+      <Section>
+        <SectionTitle>Made for you</SectionTitle>
+        <PlaylistGrid>
+          {madeForYou.map(playlist => (
+            <PlaylistCard to={`/playlist/${playlist.id}`} key={playlist.id}>
+              <PlaylistImage />
+              <PlaylistTitle>{playlist.title}</PlaylistTitle>
+              <PlaylistDescription>{playlist.description}</PlaylistDescription>
+            </PlaylistCard>
+          ))}
+        </PlaylistGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>Popular playlists</SectionTitle>
+        <PlaylistGrid>
+          {popularPlaylists.map(playlist => (
+            <PlaylistCard to={`/playlist/${playlist.id}`} key={playlist.id}>
+              <PlaylistImage />
+              <PlaylistTitle>{playlist.title}</PlaylistTitle>
+              <PlaylistDescription>{playlist.description}</PlaylistDescription>
+            </PlaylistCard>
+          ))}
+        </PlaylistGrid>
+      </Section>
+    </HomeContainer>
+  );
+};
+
+export default Home;
+
+나머지 페이지 정리
+
+	•	Library.tsx
+	•	Search.tsx
+	•	Playlist.tsx
+
+요청 시 각 파일의 코드를 위와 같이 정리하여 출력해 드리겠습니다. 필요하신 파일을 말씀해 주세요! 😊
+아래는 나머지 페이지 Library.tsx, Search.tsx, 그리고 Playlist.tsx의 정리된 코드입니다.
+
+src/pages/Library.tsx
+
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { IoSearchOutline, IoList } from 'react-icons/io5';
+import { BsGrid3X3Gap } from 'react-icons/bs';
+
+const LibraryContainer = styled.div`
+  padding: 24px;
+`;
+
+const LibraryHeader = styled.div`
+  position: sticky;
+  top: 64px;
+  background: #121212;
+  padding: 16px 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const HeaderActions = styled.div`
+  display: flex;
+  gap: 16px;
+`;
+
+const IconButton = styled.button`
+  background: none;
+  border: none;
+  color: #a7a7a7;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: white;
+  }
+
+  &.active {
+    color: white;
+  }
+`;
+
+const EmptyLibrary = styled.div`
+  text-align: center;
+  padding: 60px 20px;
+
+  h2 {
+    font-size: 32px;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+
+  p {
+    color: #a7a7a7;
+    margin-bottom: 32px;
+  }
+
+  button {
+    background: #1db954;
+    color: black;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 500px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      background: #1ed760;
+    }
+  }
+`;
+
+const PlaylistsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+`;
+
+const PlaylistsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+`;
+
+const Library: React.FC = () => {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  return (
+    <LibraryContainer>
+      <LibraryHeader>
+        <HeaderActions>
+          <IconButton>
+            <IoSearchOutline size={24} />
+          </IconButton>
+        </HeaderActions>
+        <HeaderActions>
+          <IconButton 
+            className={viewMode === 'grid' ? 'active' : ''}
+            onClick={() => setViewMode('grid')}
+          >
+            <BsGrid3X3Gap size={20} />
+          </IconButton>
+          <IconButton 
+            className={viewMode === 'list' ? 'active' : ''}
+            onClick={() => setViewMode('list')}
+          >
+            <IoList size={24} />
+          </IconButton>
+        </HeaderActions>
+      </LibraryHeader>
+
+      <EmptyLibrary>
+        <h2>Create your first playlist</h2>
+        <p>It's easy, we'll help you</p>
+        <button>Create playlist</button>
+      </EmptyLibrary>
+    </LibraryContainer>
+  );
+};
+
+export default Library;
+
+src/pages/Search.tsx
+
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { IoSearchOutline } from 'react-icons/io5';
+
+const SearchContainer = styled.div`
+  padding: 24px;
+`;
+
+const SearchHeader = styled.div`
+  position: sticky;
+  top: 64px;
+  background: #121212;
+  padding: 16px 0;
+  z-index: 2;
+`;
+
+const SearchInputWrapper = styled.div`
+  max-width: 364px;
+  position: relative;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 14px 40px;
+  border-radius: 500px;
+  border: none;
+  font-size: 0.875rem;
+  color: #000;
+  background: white;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const SearchIcon = styled(IoSearchOutline)`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #000;
+`;
+
+const BrowseSection = styled.section`
+  margin-top: 32px;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #fff;
+`;
+
+const GenresGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+`;
+
+const GenreCard = styled.div<{ color: string }>`
+  background: ${props => props.color};
+  border-radius: 8px;
+  padding: 16px;
+  aspect-ratio: 1;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.04);
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
+`;
+
+const ResultsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+`;
+
+const ResultCard = styled.div`
+  background: #181818;
+  padding: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #282828;
+  }
+`;
+
+const ResultImage = styled.div`
+  width: 100%;
+  aspect-ratio: 1;
+  background: #282828;
+  border-radius: 4px;
+  margin-bottom: 16px;
+`;
+
+const ResultTitle = styled.h3`
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 4px;
+`;
+
+const ResultDescription = styled.p`
+  font-size: 14px;
+  color: #a7a7a7;
+`;
+
+const Search: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const genres = [
+    { id: 1, name: 'Podcasts', color: '#27856a' },
+    { id: 2, name: 'Live Events', color: '#1e3264' },
+    { id: 3, name: 'Made For You', color: '#8400e7' },
+    { id: 4, name: 'New Releases', color: '#e8115b' },
+    { id: 5, name: 'Pop', color: '#148a08' },
+    { id: 6, name: 'Hip-Hop', color: '#bc5900' },
+    { id: 7, name: 'Rock', color: '#e91429' },
+    { id: 8, name: 'Latin', color: '#e1118c' },
+    { id: 9, name: 'Mood', color: '#477d95' },
+    { id: 10, name: 'Dance/Electronic', color: '#509bf5' },
+    { id: 11, name: 'Indie', color: '#b02897' },
+    { id: 12, name: 'Chill', color: '#8c67ab' }
+  ];
+
+  return (
+    <SearchContainer>
+      <SearchHeader>
+        <SearchInputWrapper>
+          <SearchIcon size={24} />
+          <SearchInput
+            type="text"
+            placeholder="What do you want to listen to?"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </SearchInputWrapper>
+      </SearchHeader>
+
+      {!searchTerm ? (
+        <BrowseSection>
+          <SectionTitle>Browse all</SectionTitle>
+          <GenresGrid>
+            {genres.map((genre) => (
+              <GenreCard key={genre.id} color={genre.color}>
+                <h3>{genre.name}</h3>
+              </GenreCard>
+            ))}
+          </GenresGrid>
+        </BrowseSection>
+      ) : (
+        <ResultsGrid>
+          {/* 검색 결과가 있을 경우 표시 */}
+        </ResultsGrid>
+      )}
+    </SearchContainer>
+  );
+};
+
+export default Search;
+
+src/pages/Playlist.tsx
+
+import React from 'react';
+import styled from 'styled-components';
+
+const PlaylistContainer = styled.div`
+  padding: 24px;
+`;
+
+const PlaylistTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+`;
+
+const Playlist: React.FC = () => {
+  return (
+    <PlaylistContainer>
+      <PlaylistTitle>Your Playlist</PlaylistTitle>
+    </PlaylistContainer>
+  );
+};
+
+export default Playlist;
+
+위 코드는 모든 주요 페이지와 컴포넌트를 깔끔하게 정리한 결과입니다. 필요 시 추가 요청 부탁드립니다! 😊
