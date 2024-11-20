@@ -1,6 +1,8 @@
 # Spotify Clone
+[Spotify 바로가기 🎵](https://open.spotify.com/)
 
-React, Styled-components, React Router를 사용하여 제작한 Spotify 클론 프로젝트입니다. Spotify의 주요 기능과 UI를 재현하며, 반응형 디자인을 지원합니다.
+React, Styled-components, React Router를 사용하여 제작한 Spotify 클론 프로젝트입니다.\
+Spotify의 주요 기능과 UI를 재현하며, 반응형 디자인을 지원합니다.
 
 ---
 
@@ -25,7 +27,7 @@ React, Styled-components, React Router를 사용하여 제작한 Spotify 클론 
 
 ## 프로젝트 구조
 
-```plaintext
+```
 spotify-clone/
 ├── public/
 │   ├── index.html        # 기본 HTML 파일
@@ -46,3 +48,38 @@ spotify-clone/
 │   └── index.tsx         # 진입점
 ├── package.json          # 프로젝트 메타데이터 및 의존성
 └── tsconfig.json         # TypeScript 설정
+```
+---
+## 코드 컨벤션
+
+### 들여쓰기
+  - 탭 1번 사용
+
+### 네이밍 규칙
+
+ -  변수명 : 카멜 케이스 (varName)
+ -  함수명 : 카멜 케이스 (varName)
+ -  컴포넌트 함수명 : 파스칼 케이스 (VarName)
+ -  클래스명 : 파스칼 케이스 (VarName)
+ -  상수 : 어퍼 스네이크 케이스 (VAR_NAME_THISWAY)
+
+### 주석
+
+```
+/*
+
+	주석 처리는
+	/* */ 에 감싸서
+	합시다
+
+*/
+```
+---
+
+## 파일 컨벤션
+
+### 파일명
+
+  - 일반 컴포넌트 파일 이름은 파스칼케이스 사용, 예: UserInfo.tsx
+  - 폴더 이름은 케밥 케이스 사용, 예: user-info
+  - 타입 정의는 카멜 케이스 사용, 예: userInfo.tsx
