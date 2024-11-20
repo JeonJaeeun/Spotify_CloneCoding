@@ -31,17 +31,6 @@ const SidebarDivider = styled.div`
   flex-shrink: 0;
 	position: relative;
 	background: #000;
-
-	&::before {
-	  background: #000;
-		content: "";
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 50%;
-    width: 2px;
-    transform: translateX(-50%);
-	}
 `;
 
 const NavSection = styled.div`
@@ -127,7 +116,7 @@ function getProposedWidth({
 	const diffX = location.current.input.clientX - location.initial.input.clientX;
 	const proposedWidth = initialWidth + diffX;
 
-	// ensure we don't go below the min or above the max allowed widths
+	/* Min과 Max 사이에서만 넓이가 조정될 수 있게 해줌 */
 	return Math.min(Math.max(widths.min, proposedWidth), widths.max);
 }
 
