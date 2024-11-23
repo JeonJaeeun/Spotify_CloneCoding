@@ -1,149 +1,167 @@
-import React from 'react';
-import styled from 'styled-components';
-import { IoArrowBack, IoArrowForward } from 'react-icons/io5';
-import { BiSearch } from 'react-icons/bi';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { HiOutlineHome } from "react-icons/hi"; // 홈 아이콘
+import { FiSearch } from "react-icons/fi"; // 검색 아이콘
+import { RiShoppingBagLine } from "react-icons/ri"; // 가방 아이콘
 
 const HeaderContainer = styled.header`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
-  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #000;
+  height: 64px;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 `;
 
-const NavigationControls = styled.div`
+const SearchSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex: 1;
+  max-width: 600px;
 `;
 
-const NavButton = styled.button`
-  width: 40px;
-  height: 40px;
+const HomeButton = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  border: none;
+  background-color: #121212;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  border: none;
+  text-decoration: none;
   cursor: pointer;
-  color: #fff;
+  color: white;
+  font-size: 20px;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  svg {
-    font-size: 20px;
+    background-color: #333;
   }
 `;
 
 const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 500px;
+  background-color: #121212;
+  border-radius: 999px;
   padding: 8px 16px;
   flex: 1;
-  max-width: 600px;
+  cursor: pointer; /* 검색창을 클릭 가능하게 설정 */
+`;
 
-  svg {
-    color: #fff;
-    margin-right: 8px;
-  }
+const SearchInput = styled.input`
+  flex: 1;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  margin-left: 8px;
 
-  input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    color: #fff;
-    font-size: 1rem;
-    outline: none;
-
-    &::placeholder {
-      color: #b3b3b3;
-    }
+  &::placeholder {
+    color: #b3b3b3;
   }
 `;
 
-const UserControls = styled.div`
+const Divider = styled.div`
+  width: 1px;
+  height: 24px;
+  background-color: #333;
+  margin: 0 12px;
+`;
+
+const BagIcon = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  font-size: 20px;
+  color: #b3b3b3;
 `;
 
-const UpgradeButton = styled.button`
-  background-color: #1db954;
-  color: #000;
-  font-size: 0.875rem;
-  font-weight: bold;
+const RightSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
+const PremiumButton = styled.button`
   padding: 8px 16px;
+  border-radius: 999px;
   border: none;
-  border-radius: 500px;
+  background-color: #fff;
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
 
   &:hover {
-    background-color: #1ed760;
+    background-color: #f1f1f1;
   }
 `;
 
 const ProfileButton = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 500px;
-  padding: 8px 12px;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #333;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
 
-  img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  span {
-    color: #fff;
-    font-size: 0.875rem;
-  }
-
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #444;
   }
 `;
 
 const Header: React.FC = () => {
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  // 검색창 클릭 시 /search 페이지로 이동
+  const handleSearchClick = () => {
+    navigate("/search");
+  };
+
   return (
     <HeaderContainer>
-      <NavigationControls>
-        <NavButton>
-          <IoArrowBack />
-        </NavButton>
-        <NavButton>
-          <IoArrowForward />
-        </NavButton>
-      </NavigationControls>
+      {/* 로고 */}
+      <Link to="/">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg"
+          alt="Spotify Logo"
+          style={{ height: "36px" }}
+        />
+      </Link>
 
-      <SearchBar>
-        <BiSearch />
-        <input type="text" placeholder="What do you want to listen to?" />
-      </SearchBar>
+      {/* 중앙 섹션 */}
+      <SearchSection>
+        <HomeButton to="/">
+          <HiOutlineHome />
+        </HomeButton>
+        <SearchBar onClick={handleSearchClick}>
+          <FiSearch />
+          <SearchInput placeholder="어떤 콘텐츠를 감상하고 싶으세요?" />
+          <Divider />
+          <BagIcon>
+            <RiShoppingBagLine />
+          </BagIcon>
+        </SearchBar>
+      </SearchSection>
 
-      <UserControls>
-        <UpgradeButton>Upgrade</UpgradeButton>
-        <ProfileButton>
-          <img
-            src="https://via.placeholder.com/32"
-            alt="User Profile"
-          />
-          <span>Profile</span>
-        </ProfileButton>
-      </UserControls>
+      {/* 오른쪽 섹션 */}
+      <RightSection>
+        <PremiumButton>Premium 둘러보기</PremiumButton>
+        <ProfileButton>Y</ProfileButton>
+      </RightSection>
     </HeaderContainer>
   );
 };

@@ -51,7 +51,7 @@ const App: React.FC = () => {
       <GlobalStyles />
       <AppContainer>
         {/* Header */}
-        <Header />
+        <Header /> {/* Header에서 Link 적용된 Home, Search 버튼 사용 */}
 
         {/* Main Content */}
         <MainSection>
@@ -62,6 +62,7 @@ const App: React.FC = () => {
           <ContentWrapper>
             <ContentArea>
               <Routes>
+                {/* 기존 라우터 */}
                 <Route path="/" element={<Home />} />
                 <Route path="/library" element={<Library />} />
                 <Route path="/search" element={<Search />} />
