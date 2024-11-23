@@ -7,6 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { IoHomeOutline, IoHome, IoSearchOutline, IoSearch } from 'react-icons/io5';
 import { AiOutlinePlus } from 'react-icons/ai';
+import NowPlaying from './NowPlaying';
 
 const SidebarWrapper = styled.div`
   display: flex;
@@ -25,23 +26,12 @@ const SidebarContainer = styled.div`
 `;
 
 const SidebarDivider = styled.div`
-	width: 20px;
+	width: 15px;
   cursor: ew-resize;
   flex-grow: 0;
   flex-shrink: 0;
 	position: relative;
 	background: #000;
-
-	&::before {
-	  background: #000;
-		content: "";
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 50%;
-    width: 2px;
-    transform: translateX(-50%);
-	}
 `;
 
 const NavSection = styled.div`
@@ -71,7 +61,6 @@ const NavItem = styled(Link)<{ active?: boolean }>`
 `;
 
 const LibraryWrapper = styled.div`
-  padding-left: 16px;
 `;
 
 const LibraryHeader = styled.div`
@@ -79,6 +68,7 @@ const LibraryHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  padding-left: 16px;
 
   h3 {
     color: #fff;
@@ -105,6 +95,7 @@ const LibraryList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-left: 16px;
 
   a {
     color: #b3b3b3;
@@ -127,7 +118,7 @@ function getProposedWidth({
 	const diffX = location.current.input.clientX - location.initial.input.clientX;
 	const proposedWidth = initialWidth + diffX;
 
-	// ensure we don't go below the min or above the max allowed widths
+	/* Min과 Max 사이에서만 넓이가 조정될 수 있게 해줌 */
 	return Math.min(Math.max(widths.min, proposedWidth), widths.max);
 }
 
@@ -144,7 +135,7 @@ const widths: {
     min : number; 
     max : number;
   } = {
-  start : 280,
+  start : 285,
   min : 180,
   max : 500
 };
@@ -217,6 +208,7 @@ const Sidebar: React.FC = () => {
               <AiOutlinePlus />
             </button>
           </LibraryHeader>
+          <NowPlaying />
           <LibraryList>
             <Link to="/playlist/1">Liked Songs</Link>
             <Link to="/playlist/2">Recently Played</Link>
