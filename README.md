@@ -35,7 +35,7 @@ spotify-clone/
 ├── src/
 │   ├── components/       # 재사용 가능한 UI 컴포넌트
 │   │   ├── Header.tsx    # 헤더 컴포넌트
-│   │   ├── Player.tsx    # 플레이어 컴포넌트
+│   │   ├── Player.jsx    # 플레이어 컴포넌트
 │   │   └── Sidebar.tsx   # 사이드바 컴포넌트
 │   ├── pages/            # 페이지 구성 요소
 │   │   ├── Home.tsx      # 홈 페이지
