@@ -11,10 +11,11 @@ import Sidebar from './components/Sidebar';
 import Player from './components/Player';
 
 // Pages
-import Home from './pages/Home';
+import Home, { ChartsView, ShowsView } from './pages/Home';
 import Library from './pages/Library';
 import Search from './pages/Search';
 import Playlist from './pages/Playlist';
+import RecommendationsView from './components/RecommendationsView';
 
 // Styled Components
 const AppContainer = styled.div`
@@ -63,6 +64,9 @@ const App: React.FC = () => {
             <ContentArea>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/recommendations" element={<RecommendationsView />} />
+                <Route path="/charts" element={<ChartsView />} />
+                <Route path="/shows" element={<ShowsView />} />
                 <Route path="/library" element={<Library />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/playlist/:id" element={<Playlist />} />

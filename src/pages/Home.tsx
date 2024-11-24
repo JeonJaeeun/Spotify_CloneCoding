@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useNavigate, BrowserRouter } from 'react-router-dom';
+import RecommendationsView from '../components/RecommendationsView';
+import MainView from '../components/Mainview';
 
 const HomeContainer = styled.div`
   padding: 24px;
@@ -19,20 +21,25 @@ const TopGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 40px;
-`;
+;`
 
-const TopItem = styled.div`
+const TopItem = styled.button<{active:boolean}>`
   background-color: #282828;
+  color: ${({ active }) => (active ? '#fff' : '#b3b3b3')};
+  background : none;
+  border : none;
   border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 16px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  border-bottom: ${({ active }) => (active ? '2px solid #fff' : '2px solid transparent')};
+  transition: border-color 0.3s ease, color 0.3s ease;
 
   &:hover {
-    background-color: #333333;
+    color: #fff;
+    border-bottom: 2px solid #fff;
   }
 `;
 
@@ -58,6 +65,21 @@ const SectionTitle = styled.h2`
   margin-bottom: 16px;
 `;
 
+const SectionTitled = styled.h2<{ active: boolean }>`
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top : 20px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  display: inline-block;
+  border-bottom: ${({ active }) => (active ? '2px solid #fff' : '2px solid transparent')};
+  transition: border-color 0.3s ease;
+
+  &:hover {
+    border-bottom: 2px solid #fff;
+  }
+`;
+
 const PlaylistGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -68,7 +90,7 @@ const PlaylistCard = styled(Link)`
   background-color: #181818;
   border-radius: 8px;
   padding: 16px;
-  text-decoration: none;
+  text-align: center;
   transition: background 0.3s ease, transform 0.2s;
 
   &:hover {
@@ -96,81 +118,99 @@ const PlaylistDescription = styled.p`
   color: #b3b3b3;
   line-height: 1.4;
 `;
+const CategoryButton = styled.button<{ active: boolean }>`
+  padding: 8px 16px;
+  border: none;
+  border-radius: 16px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right : 10px;
 
-const Home: React.FC = () => {
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
+  background-color: ${({ active }) => (active ? '#fff' : '#282828')};
+  color: ${({ active }) => (active ? '#000' : '#fff')};
 
-  const topItems = [
-    { id: 1, title: 'Liked Songs' },
-    { id: 2, title: 'Recently Played' },
-    { id: 3, title: 'Top Mix' },
-    { id: 4, title: 'Discover Weekly' },
-    { id: 5, title: 'Rock Mix' },
-    { id: 6, title: 'Daily Drive' },
+  &:hover {
+    background-color: ${({ active }) => (active ? '#ddd' : '#333')};
+  }
+`;
+const Playlist = styled.div`
+  background-color: #181818;
+  border-radius: 8px;
+  padding: 16px;
+  transition: background 0.3s ease, transform 0.2s;
+
+  &:hover {
+    background-color: #282828;
+    transform: scale(1.05);
+  }
+`;
+const CategoryButtons = styled.div``;
+
+export const ChartsView: React.FC = () => {
+  const expandedGive = [
+    { id: 1, title: 'Deep Jazz', description: '깊고 부드러운 재즈의 향연' },
+    { id: 2, title: '4:00 am Groove', description: '새벽 감성 음악의 결정판' },
+    { id: 3, title: 'Dreamlike', description: '몽환적인 음악 세계로 초대합니다' },
+    { id: 4, title: 'Lo-fi Relax', description: '집중과 휴식을 위한 Lo-fi 음악' },
   ];
+  const days = ['일요일도 잘 자요', '월요일은 상쾌하게 시작', '화요일', '수요일', '목요일', '금요일', '토요일'
+  ]
+  const today = new Date();
+ 
+  return (
+    <Section>
+      <SectionTitle>{days[today.getDay()]}</SectionTitle>
+      <PlaylistGrid>
+        {expandedGive.map((playlist) => (
+          <Playlist key={playlist.id}>
+            <PlaylistImage />
+            <PlaylistTitle>{playlist.title}</PlaylistTitle>
+            <p>{playlist.description}</p>
+          </Playlist>
+        ))}
+      </PlaylistGrid>
+    </Section>
+  );
 
-  const madeForYou = [
-    { id: 1, title: 'Daily Mix 1', description: 'Drake, The Weeknd, Travis Scott and more' },
-    { id: 2, title: 'Discover Weekly', description: 'Your weekly mixtape of fresh music' },
-    { id: 3, title: 'Release Radar', description: 'Catch all the latest music from artists you follow' },
-    { id: 4, title: 'Time Capsule', description: 'We made you a personalized playlist with songs to take you back in time' },
+};
+export const ShowsView: React.FC = () => {
+  const expandedShow= [
+    { id: 1, title: 'Deep Jazz', description: '깊고 부드러운 재즈의 향연' },
+    { id: 2, title: '4:00 am Groove', description: '새벽 감성 음악의 결정판' },
+    { id: 3, title: 'Dreamlike', description: '몽환적인 음악 세계로 초대합니다' },
+    { id: 4, title: 'Lo-fi Relax', description: '집중과 휴식을 위한 Lo-fi 음악' },
   ];
-
-  const popularPlaylists = [
-    { id: 1, title: "Today's Top Hits", description: 'Taylor Swift is on top of the Hottest 50!' },
-    { id: 2, title: 'RapCaviar', description: 'New music from Drake, Travis Scott and more' },
-    { id: 3, title: 'Rock Classics', description: 'Rock legends & epic songs that continue to inspire generations' },
-    { id: 4, title: 'Chill Hits', description: 'Kick back to the best new and recent chill hits' },
-  ];
-
+  const days = ['일요일도 잘 자요', '월요일은 상쾌하게 시작', '화요일', '수요일', '목요일', '금요일', '토요일'
+  ]
+  const today = new Date();
+ 
   return (
     <HomeContainer>
-      <Greeting>{getGreeting()}</Greeting>
-
-      <Section>
-        <SectionTitle>Your Top Items</SectionTitle>
-        <TopGrid>
-          {topItems.map((item) => (
-            <TopItem key={item.id}>
-              <ItemImage />
-              <ItemTitle>{item.title}</ItemTitle>
-            </TopItem>
-          ))}
-        </TopGrid>
-      </Section>
-
-      <Section>
-        <SectionTitle>Made For You</SectionTitle>
-        <PlaylistGrid>
-          {madeForYou.map((playlist) => (
-            <PlaylistCard to={`/playlist/${playlist.id}`} key={playlist.id}>
-              <PlaylistImage />
-              <PlaylistTitle>{playlist.title}</PlaylistTitle>
-              <PlaylistDescription>{playlist.description}</PlaylistDescription>
-            </PlaylistCard>
-          ))}
-        </PlaylistGrid>
-      </Section>
-
-      <Section>
-        <SectionTitle>Popular Playlists</SectionTitle>
-        <PlaylistGrid>
-          {popularPlaylists.map((playlist) => (
-            <PlaylistCard to={`/playlist/${playlist.id}`} key={playlist.id}>
-              <PlaylistImage />
-              <PlaylistTitle>{playlist.title}</PlaylistTitle>
-              <PlaylistDescription>{playlist.description}</PlaylistDescription>
-            </PlaylistCard>
-          ))}
-        </PlaylistGrid>
-      </Section>
+    <Section>
+      <SectionTitle>{days[today.getDay()]}</SectionTitle>
+      <PlaylistGrid>
+        {expandedShow.map((playlist) => (
+          <Playlist key={playlist.id}>
+            <PlaylistImage />
+            <PlaylistTitle>{playlist.title}</PlaylistTitle>
+            <p>{playlist.description}</p>
+          </Playlist>
+        ))}
+      </PlaylistGrid>
+    </Section>
     </HomeContainer>
   );
 };
+
+
+const Home: React.FC = () => (
+  <Routes>
+    <Route path="/" element={<MainView />} />
+    <Route path="/recommendations" element={<RecommendationsView />} />
+    <Route path="/charts" element={<ChartsView />} />
+    <Route path="/shows" element={<ShowsView />} />
+  </Routes>
+  );
+
 
 export default Home;
