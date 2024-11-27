@@ -1,9 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from 'styled-components';
+import { AiOutlinePlus } from 'react-icons/ai';
 
-const NowPlayingList = styled.div`
+const LibraryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-left: 16px;
+
+  h3 {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s;
+    display: flex;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+`;
+
+let NowPlayingList = styled.div<{ isVisible: boolean }>`
     width: 100%;
     padding-bottom: 16px;
+    max-height: ${props => props.isVisible ? '1000px' : '0'};
+    opacity: ${props => props.isVisible ? '1' : '0'};
+    overflow: hidden;
+    padding-bottom: ${props => props.isVisible ? '16px' : '0'};
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
 `;
 
 const NowPlayingItem = styled.div`
@@ -82,26 +116,42 @@ const NowPlayingArtist = styled.a.attrs({
 `;
 
 const NowPlaying : React.FC = () => {
-    const nowPlayings = [
-        { id: 1, title : "Now dssssssssad s slah", artist : "Artist" },
+    const [isVisible, setisVisible] = useState<boolean>(true);
+    
+    function toggleVisible () {
+        setisVisible(!isVisible);
+    }
+    
+    const nowPlayings: {
+        id: number;
+        title: string;
+        artist: string;
+    }[] = [
+        { id: 1, title : "Now Playing", artist : "Artist" },
         { id: 2, title : "Now Playing-----", artist : "Artist" },
-        { id: 3, title : "Now Playing", artist : "Artist" },
-        { id: 4, title : "The Less I Know The Better", artist : "Tame Impala" },
+        { id: 3, title : "The Less I Know The Better", artist : "Tame Impala" },
     ];
 
     return (
-        <NowPlayingList>
-            {nowPlayings.map((nowPlaying) => (
-                <NowPlayingItem key={nowPlaying.id}>
-                    <NowPlayingImage />
-                    <NowPlayingInfo>
-                        <NowPlayingTitle>{nowPlaying.title}</NowPlayingTitle>
-                        <NowPlayingArtist>{nowPlaying.artist}</NowPlayingArtist>
-                    </NowPlayingInfo>
-                </NowPlayingItem>
-            ))}
-            
-        </NowPlayingList>
+        <>
+            <LibraryHeader>
+                    <h3>Now Playing</h3>
+                    <button onClick={toggleVisible}>
+                    <AiOutlinePlus style={{ transform: isVisible ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}/>
+                    </button>
+            </LibraryHeader>
+            <NowPlayingList isVisible={isVisible}>
+                {nowPlayings.map((nowPlaying) => (
+                    <NowPlayingItem key={nowPlaying.id}>
+                        <NowPlayingImage />
+                        <NowPlayingInfo>
+                            <NowPlayingTitle>{nowPlaying.title}</NowPlayingTitle>
+                            <NowPlayingArtist>{nowPlaying.artist}</NowPlayingArtist>
+                        </NowPlayingInfo>
+                    </NowPlayingItem>
+                ))}
+            </NowPlayingList>
+        </>
     )
 }
 

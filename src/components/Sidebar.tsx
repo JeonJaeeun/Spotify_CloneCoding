@@ -6,7 +6,6 @@ import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/type
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { IoHomeOutline, IoHome, IoSearchOutline, IoSearch } from 'react-icons/io5';
-import { AiOutlinePlus } from 'react-icons/ai';
 import NowPlaying from './NowPlaying';
 
 const SidebarWrapper = styled.div`
@@ -63,34 +62,6 @@ const NavItem = styled(Link)<{ active?: boolean }>`
 const LibraryWrapper = styled.div`
 `;
 
-const LibraryHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  padding-left: 16px;
-
-  h3 {
-    color: #fff;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-
-  button {
-    background: none;
-    border: none;
-    color: #b3b3b3;
-    font-size: 20px;
-    cursor: pointer;
-    transition: color 0.3s;
-    display: flex;
-
-    &:hover {
-      color: #fff;
-    }
-  }
-`;
-
 const LibraryList = styled.div`
   display: flex;
   flex-direction: column;
@@ -107,10 +78,6 @@ const LibraryList = styled.div`
     }
   }
 `;
-
-const hideNowPlaying = () => {
-
-}
 
 function getProposedWidth({
 	initialWidth,
@@ -207,12 +174,6 @@ const Sidebar: React.FC = () => {
 
         {/* Library Section */}
         <LibraryWrapper>
-          <LibraryHeader>
-            <h3>Now Playing</h3>
-            <button onClick={hideNowPlaying}>
-              <AiOutlinePlus />
-            </button>
-          </LibraryHeader>
           <NowPlaying />
           <LibraryList>
             <Link to="/playlist/1">Liked Songs</Link>
