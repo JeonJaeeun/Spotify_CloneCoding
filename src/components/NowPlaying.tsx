@@ -2,6 +2,7 @@ import React from "react";
 import styled from 'styled-components';
 
 const NowPlayingList = styled.div`
+    width: 100%;
     padding-bottom: 16px;
 `;
 
@@ -38,11 +39,16 @@ const NowPlayingInfo = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2px;
+    width: 100%;
     align-items: flex-start;
 `;
 
+// 글자 수가 박스보다 커지면 ...으로 표시 처리
 const NowPlayingTitle = styled.span`
-   
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;  
+    overflow: hidden;
 `;
 
 const NowPlayingArtist = styled.a.attrs({
@@ -50,33 +56,51 @@ const NowPlayingArtist = styled.a.attrs({
 })`
     color: #b3b3b3;
     font-size: 0.875rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    width: 100%;
+    text-decoration: none;
     position: relative;
 
-    &::after {
+    &:hover:not(:empty)::before {
         content: '';
         position: absolute;
-        width: 0;
-        height: 1px;
-        bottom: -2px;
-        left: 0;
-        color: #FFF;
-        transition: width 0.3s ease;
+        right: 0;
+        bottom: 0;
+        padding: 0 2px;
+        background: inherit;
     }
 
     &:hover {
-        width: 100%;
+        text-decoration: underline;
+        text-decoration-skip-ink: none;
+        text-decoration-skip: none;
+        color: #fff;
     }
 `;
+
 const NowPlaying : React.FC = () => {
+    const nowPlayings = [
+        { id: 1, title : "Now dssssssssad s slah", artist : "Artist" },
+        { id: 2, title : "Now Playing-----", artist : "Artist" },
+        { id: 3, title : "Now Playing", artist : "Artist" },
+        { id: 4, title : "The Less I Know The Better", artist : "Tame Impala" },
+    ];
+
     return (
         <NowPlayingList>
-            <NowPlayingItem>
-                <NowPlayingImage />
-                <NowPlayingInfo>
-                    <NowPlayingTitle>Now Playing</NowPlayingTitle>
-                    <NowPlayingArtist>Artist</NowPlayingArtist>
-                </NowPlayingInfo>
-            </NowPlayingItem>
+            {nowPlayings.map((nowPlaying) => (
+                <NowPlayingItem key={nowPlaying.id}>
+                    <NowPlayingImage />
+                    <NowPlayingInfo>
+                        <NowPlayingTitle>{nowPlaying.title}</NowPlayingTitle>
+                        <NowPlayingArtist>{nowPlaying.artist}</NowPlayingArtist>
+                    </NowPlayingInfo>
+                </NowPlayingItem>
+            ))}
+            
         </NowPlayingList>
     )
 }

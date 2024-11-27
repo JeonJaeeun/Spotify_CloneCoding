@@ -108,6 +108,10 @@ const LibraryList = styled.div`
   }
 `;
 
+const hideNowPlaying = () => {
+
+}
+
 function getProposedWidth({
 	initialWidth,
 	location,
@@ -139,6 +143,7 @@ const widths: {
   min : 180,
   max : 500
 };
+
 
 const Sidebar: React.FC = () => {
   const [initialWidth, setInitialWidth] = useState(widths.start);
@@ -203,8 +208,8 @@ const Sidebar: React.FC = () => {
         {/* Library Section */}
         <LibraryWrapper>
           <LibraryHeader>
-            <h3>Your Library</h3>
-            <button>
+            <h3>Now Playing</h3>
+            <button onClick={hideNowPlaying}>
               <AiOutlinePlus />
             </button>
           </LibraryHeader>
