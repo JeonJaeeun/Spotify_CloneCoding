@@ -36,7 +36,8 @@ spotify-clone/
 │   ├── components/       # 재사용 가능한 UI 컴포넌트
 │   │   ├── Header.tsx    # 헤더 컴포넌트
 │   │   ├── Player.tsx    # 플레이어 컴포넌트
-│   │   └── Sidebar.tsx   # 사이드바 컴포넌트
+│   │   ├── Sidebar.tsx   # 사이드바 컴포넌트
+│   │   └── NowPlaying.tsx  # 재생 목록 컴포넌트
 │   ├── pages/            # 페이지 구성 요소
 │   │   ├── Home.tsx      # 홈 페이지
 │   │   ├── Search.tsx    # 검색 페이지
@@ -53,6 +54,7 @@ spotify-clone/
 ## 코드 컨벤션
 
 ### 들여쓰기
+
   - 탭 1번 사용
 
 ### 네이밍 규칙
@@ -68,9 +70,9 @@ spotify-clone/
 ```
 /*
 
-	주석 처리는
-	/* */ 에 감싸서
-	합시다
+    주석 처리는
+    /* */ 에 감싸서
+    합시다
 
 */
 ```

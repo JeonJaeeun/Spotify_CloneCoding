@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
 
 const LibraryHeader = styled.div`
   display: flex;
@@ -60,6 +61,23 @@ const NowPlayingItem = styled.div`
     }
 `;
 
+const NowPlayingImageWrapper = styled.div`
+    button {
+        background: none;
+        border: none;
+        color: #b3b3b3;
+        font-size: 20px;
+        cursor: pointer;
+        transition: color 0.3s;
+        display: flex;
+        overflow-wrap: anywhere;
+        text-align: center;
+        &:hover {
+        color: #fff;
+        }
+    }
+`;
+
 const NowPlayingImage = styled.img.attrs({
     src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3V2oPuGZb8EcjRIsa05uFdDjC2XIUyqqM8w&s",
     alt: "사진 없음",
@@ -115,21 +133,62 @@ const NowPlayingArtist = styled.a.attrs({
     }
 `;
 
+type Playing =
+    { 
+        type : "playing";
+    } 
+    | {
+        type : "paused";
+    } 
+    | {
+        type : "not playing";
+    };
+
+type nowPlaying = {
+    id: number;
+    title: string;
+    artist: string;
+};
+
+const NowPlayingEntry : React.FC<{nowPlayingItem : nowPlaying}> = ({nowPlayingItem}) => {
+    const [ playingState, setplayingState ] = useState<Playing>({ type : "not playing" });
+
+    function togglePlaying() : void {
+        if (playingState.type === "playing") {
+            setplayingState( { type : "paused" });
+        }    
+        else if (playingState.type === "paused" || playingState.type === "not playing") {
+            setplayingState({ type : "playing" });
+        }
+    }
+
+    return (
+    <NowPlayingItem key={nowPlayingItem.id}>
+        <NowPlayingImageWrapper>
+            <NowPlayingImage />
+            <button onClick={togglePlaying}>
+                {playingState.type === "playing" ? <BsFillPauseFill /> : <BsFillPlayFill />}
+            </button>
+        </NowPlayingImageWrapper>
+        <NowPlayingInfo>
+            <NowPlayingTitle>{nowPlayingItem.title}</NowPlayingTitle>
+            <NowPlayingArtist>{nowPlayingItem.artist}</NowPlayingArtist>
+        </NowPlayingInfo>
+    </NowPlayingItem>
+    );
+};
+
 const NowPlaying : React.FC = () => {
-    const [isVisible, setisVisible] = useState<boolean>(true);
+    const [ isVisible, setisVisible ] = useState<boolean>(true);
     
-    function toggleVisible () {
+    function toggleVisible () : void {
         setisVisible(!isVisible);
     }
     
-    const nowPlayings: {
-        id: number;
-        title: string;
-        artist: string;
-    }[] = [
-        { id: 1, title : "Now Playing", artist : "Artist" },
-        { id: 2, title : "Now Playing-----", artist : "Artist" },
-        { id: 3, title : "The Less I Know The Better", artist : "Tame Impala" },
+    const nowPlayings: nowPlaying[] = [
+        { id: 1, title : "Now Playing", artist : "Artist"},
+        { id: 2, title : "Now Playing-----", artist : "Artist"},
+        { id: 3, title : "The Less I Know The Better", artist : "Tame Impala"},
     ];
 
     return (
@@ -137,22 +196,16 @@ const NowPlaying : React.FC = () => {
             <LibraryHeader>
                     <h3>Now Playing</h3>
                     <button onClick={toggleVisible}>
-                    <AiOutlinePlus style={{ transform: isVisible ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}/>
+                        <AiOutlinePlus style={{ transform: isVisible ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}/>
                     </button>
             </LibraryHeader>
             <NowPlayingList isVisible={isVisible}>
-                {nowPlayings.map((nowPlaying) => (
-                    <NowPlayingItem key={nowPlaying.id}>
-                        <NowPlayingImage />
-                        <NowPlayingInfo>
-                            <NowPlayingTitle>{nowPlaying.title}</NowPlayingTitle>
-                            <NowPlayingArtist>{nowPlaying.artist}</NowPlayingArtist>
-                        </NowPlayingInfo>
-                    </NowPlayingItem>
+                {nowPlayings.map((nowPlayingItem) => (
+                    <NowPlayingEntry key={nowPlayingItem.id} nowPlayingItem={nowPlayingItem} />
                 ))}
             </NowPlayingList>
         </>
     )
-}
+};
 
 export default NowPlaying;
