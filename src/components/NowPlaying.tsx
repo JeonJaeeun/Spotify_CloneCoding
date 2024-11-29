@@ -62,19 +62,34 @@ const NowPlayingItem = styled.div`
 `;
 
 const NowPlayingImageWrapper = styled.div`
+    position: relative;
     button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
         background: none;
         border: none;
         color: #b3b3b3;
         font-size: 20px;
+        padding: 8px;
         cursor: pointer;
         transition: color 0.3s;
         display: flex;
         overflow-wrap: anywhere;
         text-align: center;
+        opacity: 0;
         &:hover {
-        color: #fff;
+            color: #fff;
         }
+    }
+    &:hover button {
+        opacity: 1;
+    }
+    svg {
+        width: 32px;
+        height: 32px;
     }
 `;
 
@@ -150,6 +165,7 @@ type nowPlaying = {
     artist: string;
 };
 
+// 곡들마다 각각의 state를 가지게 할 수 있게 함
 const NowPlayingEntry : React.FC<{nowPlayingItem : nowPlaying}> = ({nowPlayingItem}) => {
     const [ playingState, setplayingState ] = useState<Playing>({ type : "not playing" });
 
@@ -165,10 +181,10 @@ const NowPlayingEntry : React.FC<{nowPlayingItem : nowPlaying}> = ({nowPlayingIt
     return (
     <NowPlayingItem key={nowPlayingItem.id}>
         <NowPlayingImageWrapper>
-            <NowPlayingImage />
             <button onClick={togglePlaying}>
                 {playingState.type === "playing" ? <BsFillPauseFill /> : <BsFillPlayFill />}
             </button>
+            <NowPlayingImage />
         </NowPlayingImageWrapper>
         <NowPlayingInfo>
             <NowPlayingTitle>{nowPlayingItem.title}</NowPlayingTitle>
