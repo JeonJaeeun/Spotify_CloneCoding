@@ -6,7 +6,7 @@ import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/type
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { IoHomeOutline, IoHome, IoSearchOutline, IoSearch } from 'react-icons/io5';
-import { AiOutlinePlus } from 'react-icons/ai';
+import NowPlaying from './NowPlaying';
 
 const SidebarWrapper = styled.div`
   display: flex;
@@ -25,7 +25,7 @@ const SidebarContainer = styled.div`
 `;
 
 const SidebarDivider = styled.div`
-	width: 20px;
+	width: 15px;
   cursor: ew-resize;
   flex-grow: 0;
   flex-shrink: 0;
@@ -60,40 +60,13 @@ const NavItem = styled(Link)<{ active?: boolean }>`
 `;
 
 const LibraryWrapper = styled.div`
-  padding-left: 16px;
-`;
-
-const LibraryHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-
-  h3 {
-    color: #fff;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-
-  button {
-    background: none;
-    border: none;
-    color: #b3b3b3;
-    font-size: 20px;
-    cursor: pointer;
-    transition: color 0.3s;
-    display: flex;
-
-    &:hover {
-      color: #fff;
-    }
-  }
 `;
 
 const LibraryList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-left: 16px;
 
   a {
     color: #b3b3b3;
@@ -133,10 +106,11 @@ const widths: {
     min : number; 
     max : number;
   } = {
-  start : 280,
+  start : 285,
   min : 180,
   max : 500
 };
+
 
 const Sidebar: React.FC = () => {
   const [initialWidth, setInitialWidth] = useState(widths.start);
@@ -200,12 +174,7 @@ const Sidebar: React.FC = () => {
 
         {/* Library Section */}
         <LibraryWrapper>
-          <LibraryHeader>
-            <h3>Your Library</h3>
-            <button>
-              <AiOutlinePlus />
-            </button>
-          </LibraryHeader>
+          <NowPlaying />
           <LibraryList>
             <Link to="/playlist/1">Liked Songs</Link>
             <Link to="/playlist/2">Recently Played</Link>
