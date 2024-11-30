@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
-import { AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlinePlus, AiOutlineDelete } from 'react-icons/ai';
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
+import { on } from "events";
 
 const LibraryHeader = styled.div`
   display: flex;
@@ -41,7 +42,7 @@ let NowPlayingList = styled.div<{ isVisible: boolean }>`
     transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
 `;
 
-const NowPlayingItem = styled.div`
+const NowPlayingItem = styled.div<{ isPlaying?: boolean }>`
     display: flex;
     align-items: center;
     gap: 16px;
@@ -50,6 +51,8 @@ const NowPlayingItem = styled.div`
     font-size: 1rem;
     text-decoration: none;
     transition: background-color 0.3s, color 0.3s;
+    background-color: ${props => props.isPlaying ? '#282828' : 'transparent'};
+    color: ${ props => props.isPlaying ? '#fff' : 'inherit' };
 
     &:hover {
         background-color: #282828;
@@ -61,7 +64,7 @@ const NowPlayingItem = styled.div`
     }
 `;
 
-const NowPlayingImageWrapper = styled.div`
+const NowPlayingImageWrapper = styled.div<{ isPlaying?: boolean }>`
     position: relative;
     button {
         position: absolute;
@@ -71,7 +74,7 @@ const NowPlayingImageWrapper = styled.div`
         z-index: 1;
         background: none;
         border: none;
-        color: #b3b3b3;
+        color: ${props => props.isPlaying ? '#fff' : '#b3b3b3'};
         font-size: 20px;
         padding: 8px;
         cursor: pointer;
@@ -79,7 +82,8 @@ const NowPlayingImageWrapper = styled.div`
         display: flex;
         overflow-wrap: anywhere;
         text-align: center;
-        opacity: 0;
+        opacity: ${props => props.isPlaying ? '1' : '0'};
+
         &:hover {
             color: #fff;
         }
@@ -148,16 +152,22 @@ const NowPlayingArtist = styled.a.attrs({
     }
 `;
 
-type Playing =
-    { 
-        type : "playing";
-    } 
-    | {
-        type : "paused";
-    } 
-    | {
-        type : "not playing";
-    };
+const NowPlayingDelete = styled.div<{isPlaying? : boolean}>`
+    display: flex;
+    align-items: center;
+
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: ${props => props.isPlaying ? '#fff' : '#b3b3b3'};
+    }
+    svg {
+        width: 24px;
+        height: 24px;
+        font-size: 20px;
+    }
+`;
 
 type nowPlaying = {
     id: number;
@@ -165,24 +175,21 @@ type nowPlaying = {
     artist: string;
 };
 
-// 곡들마다 각각의 state를 가지게 할 수 있게 함
-const NowPlayingEntry : React.FC<{nowPlayingItem : nowPlaying}> = ({nowPlayingItem}) => {
-    const [ playingState, setplayingState ] = useState<Playing>({ type : "not playing" });
-
+// 곡들마다 각각의 state를 가지게할 수 있게.ham
+const NowPlayingEntry : React.FC<{nowPlayingItem : nowPlaying, isCurrentlyPlaying: boolean, onPlayingChange: (isPlaying: boolean) => void, onDelete: (id: number) => void}> = ({nowPlayingItem, isCurrentlyPlaying, onPlayingChange, onDelete}) => {
     function togglePlaying() : void {
-        if (playingState.type === "playing") {
-            setplayingState( { type : "paused" });
-        }    
-        else if (playingState.type === "paused" || playingState.type === "not playing") {
-            setplayingState({ type : "playing" });
-        }
+        onPlayingChange(!isCurrentlyPlaying);
+    }
+
+    function deleteNowPlaying(id: number) {
+        onDelete(id);
     }
 
     return (
-    <NowPlayingItem key={nowPlayingItem.id}>
-        <NowPlayingImageWrapper>
+    <NowPlayingItem key={nowPlayingItem.id} isPlaying={isCurrentlyPlaying}>
+        <NowPlayingImageWrapper isPlaying={isCurrentlyPlaying}>
             <button onClick={togglePlaying}>
-                {playingState.type === "playing" ? <BsFillPauseFill /> : <BsFillPlayFill />}
+                {isCurrentlyPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}
             </button>
             <NowPlayingImage />
         </NowPlayingImageWrapper>
@@ -190,15 +197,30 @@ const NowPlayingEntry : React.FC<{nowPlayingItem : nowPlaying}> = ({nowPlayingIt
             <NowPlayingTitle>{nowPlayingItem.title}</NowPlayingTitle>
             <NowPlayingArtist>{nowPlayingItem.artist}</NowPlayingArtist>
         </NowPlayingInfo>
+        <NowPlayingDelete isPlaying={isCurrentlyPlaying}>
+            <button onClick={() => deleteNowPlaying(nowPlayingItem.id)}>
+                <AiOutlineDelete />
+            </button>
+        </NowPlayingDelete>
+        
     </NowPlayingItem>
     );
 };
 
 const NowPlaying : React.FC = () => {
     const [ isVisible, setisVisible ] = useState<boolean>(true);
+    const [ currentlyPlayingId, setCurrentlyPlayingId ] = useState<number | null>(null);
     
     function toggleVisible () : void {
         setisVisible(!isVisible);
+    }
+
+    function handlePlayingChange(id: number, isPlaying: boolean) : void {
+        if (isPlaying) {
+            setCurrentlyPlayingId(id);
+        } else if (currentlyPlayingId === id) {
+            setCurrentlyPlayingId(null);
+        }
     }
     
     const nowPlayings: nowPlaying[] = [
@@ -206,6 +228,11 @@ const NowPlaying : React.FC = () => {
         { id: 2, title : "Now Playing-----", artist : "Artist"},
         { id: 3, title : "The Less I Know The Better", artist : "Tame Impala"},
     ];
+
+    // 미완성
+    function deleteNowPlaying(id: number) : void {
+        nowPlayings.splice(nowPlayings.findIndex((nowPlayingItem) => nowPlayingItem.id === id), 1);
+    }
 
     return (
         <>
@@ -217,7 +244,13 @@ const NowPlaying : React.FC = () => {
             </LibraryHeader>
             <NowPlayingList isVisible={isVisible}>
                 {nowPlayings.map((nowPlayingItem) => (
-                    <NowPlayingEntry key={nowPlayingItem.id} nowPlayingItem={nowPlayingItem} />
+                    <NowPlayingEntry 
+                        key={nowPlayingItem.id} 
+                        nowPlayingItem={nowPlayingItem}
+                        isCurrentlyPlaying={currentlyPlayingId === nowPlayingItem.id}
+                        onPlayingChange={(isPlaying) => handlePlayingChange(nowPlayingItem.id, isPlaying)}
+                        onDelete={deleteNowPlaying}
+                    />
                 ))}
             </NowPlayingList>
         </>
