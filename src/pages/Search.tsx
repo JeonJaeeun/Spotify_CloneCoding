@@ -168,6 +168,7 @@ const Search: React.FC = () => {
 
   return (
     <SearchContainer>
+      {/* 
       <SearchHeader>
         <SearchInputWrapper>
           <SearchIcon size={24} />
@@ -179,6 +180,7 @@ const Search: React.FC = () => {
           />
         </SearchInputWrapper>
       </SearchHeader>
+      */}
 
       {searchTerm ? (
         <SearchResults>

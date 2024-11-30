@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { IoArrowBack, IoArrowForward } from 'react-icons/io5';
 import { BiSearch } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -118,6 +119,12 @@ const ProfileButton = styled.div`
 `;
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSearchClick = () => {
+    navigate('/Search');
+  };
+
   return (
     <HeaderContainer>
       <NavigationControls>
@@ -129,7 +136,7 @@ const Header: React.FC = () => {
         </NavButton>
       </NavigationControls>
 
-      <SearchBar>
+      <SearchBar onClick={handleSearchClick}>
         <BiSearch />
         <input type="text" placeholder="What do you want to listen to?" />
       </SearchBar>
